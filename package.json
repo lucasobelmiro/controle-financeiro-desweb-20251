@@ -1,0 +1,24 @@
+{
+  "name": "controle-financeiro-desweb-20251",
+  "version": "1.0.0",
+  "description": "## 📌 Descrição",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasobelmiro/controle-financeiro-desweb-20251.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasobelmiro/controle-financeiro-desweb-20251/issues"
+  },
+  "homepage": "https://github.com/lucasobelmiro/controle-financeiro-desweb-20251#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
