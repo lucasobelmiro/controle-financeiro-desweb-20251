@@ -1,6 +1,6 @@
 # Sistema de Controle Financeiro Pessoal
 
-## 📌 Descrição
+## Descrição
 
 Este projeto é uma aplicação web para **controle financeiro pessoal**, desenvolvido como parte da disciplina de **Princípios de Desenvolvimento Web**.
 
