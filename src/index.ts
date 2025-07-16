@@ -1,9 +1,7 @@
-import express from "express";
+import * as express from "express";
 import * as dotenv from "dotenv";
 import sequelize from "./config/database";
 import { UserRepository } from "./repository/UserRepository";
-import { Request, Response } from "express";
-
 dotenv.config();
 
 const app = express();
@@ -11,7 +9,7 @@ app.use(express.json());
 
 const userRepo = new UserRepository();
 
-app.post("/users", async (req: Request, res: Response) => {
+app.post("/users", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const user = await userRepo.createUser(name, email, password);
@@ -23,7 +21,7 @@ app.post("/users", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/users", async (req: Request, res: Response) => {
+app.get("/users", async (req, res) => {
   try {
     const users = await userRepo.getAllUsers();
     res.json(users); // Retorna todos os usuários

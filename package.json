@@ -2,7 +2,6 @@
   "name": "controle-financeiro-desweb-20251",
   "version": "1.0.0",
   "description": "## 📌 Descrição",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts"
