@@ -1,36 +1,18 @@
 import * as express from "express";
 import * as dotenv from "dotenv";
 import sequelize from "./config/database";
-import { UserRepository } from "./repository/UserRepository";
+import userRoutes from "./routes/userRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
+import transactionRoutes from "./routes/transactionRoutes";
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-const userRepo = new UserRepository();
-
-app.post("/users", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    const user = await userRepo.createUser(name, email, password);
-    res.json(user); // Retorna o usuário criado
-  } catch (error: any) {
-    res
-      .status(500)
-      .json({ message: "Erro ao criar o usuário", error: error.message });
-  }
-});
-
-app.get("/users", async (req, res) => {
-  try {
-    const users = await userRepo.getAllUsers();
-    res.json(users); // Retorna todos os usuários
-  } catch (error: any) {
-    res
-      .status(500)
-      .json({ message: "Erro ao obter os usuários", error: error.message });
-  }
-});
+app.use("/users", userRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/transactions", transactionRoutes);
 
 // Testando a conexão e inicializando o servidor
 sequelize

@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "API Controle Financeiro - Testes",
+    "_postman_id": "fake-id-1234",
+    "description": "Coleção de testes dos endpoints da API de Controle Financeiro.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Criar Usuário - Sucesso",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Lucas Belmiro\",\n  \"email\": \"lucas@email.com\",\n  \"password\": \"123456\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["users"] }
+      }
+    },
+    {
+      "name": "Criar Usuário - Erro (Sem senha)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Lucas Belmiro\",\n  \"email\": \"lucas@email.com\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["users"] }
+      }
+    },
+    {
+      "name": "Criar Categoria - Sucesso",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alimentação\",\n  \"type\": \"saida\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/categories", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["categories"] }
+      }
+    },
+    {
+      "name": "Criar Categoria - Erro (Sem tipo)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alimentação\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/categories", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["categories"] }
+      }
+    },
+    {
+      "name": "Criar Transação - Sucesso",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"descricao\": \"Compra no mercado\",\n  \"valor\": 150.75,\n  \"tipo\": \"saida\",\n  \"data\": \"2025-07-22\",\n  \"userId\": 1,\n  \"categoryId\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:3000/transactions", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["transactions"] }
+      }
+    },
+    {
+      "name": "Criar Transação - Erro (Campos ausentes)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"descricao\": \"\",\n  \"userId\": 1,\n  \"categoryId\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:3000/transactions", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["transactions"] }
+      }
+    }
+  ]
+}

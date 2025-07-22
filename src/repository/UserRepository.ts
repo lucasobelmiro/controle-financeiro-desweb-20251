@@ -14,4 +14,8 @@ export class UserRepository {
   async getAllUsers() {
     return await User.findAll();
   }
+
+  async getUserById(id: number) {
+    return await User.findByPk(id);
+  }
 }

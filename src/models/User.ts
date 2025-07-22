@@ -9,7 +9,7 @@ interface UserAttributes {
   password: string;
 }
 
-interface UserCreationAttributes {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
 export class User
   extends Model<UserAttributes, UserCreationAttributes>
