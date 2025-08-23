@@ -1,58 +1,61 @@
 import { Request, Response } from "express";
-import { CategoryRepository } from "../repository/CategoryRepository";
-
-const categoryRepo = new CategoryRepository();
-
+import { CategoryService } from "../services/categoryService";
 export class CategoryController {
+  constructor(private categoryService: CategoryService) {}
+
   async create(req: Request, res: Response) {
-    const { name, type } = req.body;
     try {
-      const category = await categoryRepo.createCategory(name, type);
+      const { name } = req.body;
+      const category = await this.categoryService.createCategory(name);
       return res.status(201).json(category);
-    } catch (error) {
-      return res
-        .status(400)
-        .json({ message: "Erro ao criar categoria", error });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
   }
 
   async getAll(req: Request, res: Response) {
-    const categories = await categoryRepo.getAllCategories();
+    const categories = await this.categoryService.getAllCategories();
     return res.json(categories);
   }
 
   async getById(req: Request, res: Response) {
-    const { id } = req.params;
-    const category = await categoryRepo.getCategoryById(Number(id));
-    if (!category) {
-      return res.status(404).json({ message: "Categoria não encontrada" });
+    try {
+      const { id } = req.params;
+      const category = await this.categoryService.getCategoryById(Number(id));
+      return res.json(category);
+    } catch (error: any) {
+      return res.status(404).json({ message: error.message });
     }
-    return res.json(category);
   }
 
   async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const category = await categoryRepo.getCategoryById(Number(id));
-    if (!category) {
-      return res.status(404).json({ message: "Categoria não encontrada" });
-    }
-    const { name, type } = req.body;
     try {
-      await category.update({ name, type });
+      const { id } = req.params;
+      const { name } = req.body;
+      const category = await this.categoryService.updateCategory(
+        Number(id),
+        name
+      );
       return res.json(category);
-    } catch (error) {
-      return res
-        .status(400)
-        .json({ message: "Erro ao atualizar categoria", error });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
   }
 
   async delete(req: Request, res: Response) {
-    const { id } = req.params;
-    const success = await categoryRepo.deleteCategory(Number(id));
-    if (!success) {
-      return res.status(404).json({ message: "Categoria não encontrada" });
+    try {
+      const { id } = req.params;
+      await this.categoryService.deleteCategory(Number(id));
+      return res.status(204).send();
+    } catch (error: any) {
+      const msg = String(error.message || "");
+      if (msg === "Categoria não encontrada") {
+        return res.status(404).json({ message: msg });
+      }
+      if (msg.includes("transações associadas")) {
+        return res.status(400).json({ message: msg });
+      }
+      return res.status(400).json({ message: msg });
     }
-    return res.status(204).send();
   }
 }

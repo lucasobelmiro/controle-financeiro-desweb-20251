@@ -1,8 +1,8 @@
 import { Category } from "../models/Category";
 
 export class CategoryRepository {
-  async createCategory(name: string, type: "entrada" | "saida") {
-    return await Category.create({ name, type });
+  async createCategory(name: string) {
+    return await Category.create({ name });
   }
 
   async getAllCategories() {
@@ -11,6 +11,10 @@ export class CategoryRepository {
 
   async getCategoryById(id: number) {
     return await Category.findByPk(id);
+  }
+
+  async getCategoryByName(name: string) {
+    return await Category.findOne({ where: { name } });
   }
 
   async deleteCategory(id: number) {

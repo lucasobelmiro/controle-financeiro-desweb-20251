@@ -1,15 +1,16 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/database";
 
-// Defina os atributos do modelo
-interface UserAttributes {
+export interface UserAttributes {
   id: number;
   name: string;
   email: string;
   password: string;
+  role: "user" | "admin";
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+export interface UserCreationAttributes
+  extends Optional<UserAttributes, "id" | "role"> {}
 
 export class User
   extends Model<UserAttributes, UserCreationAttributes>
@@ -19,9 +20,9 @@ export class User
   public name!: string;
   public email!: string;
   public password!: string;
+  public role!: "user" | "admin";
 }
 
-// Inicialize o modelo com os campos no banco
 User.init(
   {
     id: {
@@ -42,6 +43,11 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.ENUM("user", "admin"),
+      allowNull: false,
+      defaultValue: "user",
+    },
   },
   {
     sequelize,
@@ -49,3 +55,5 @@ User.init(
     timestamps: false,
   }
 );
+
+export default User;

@@ -4,7 +4,9 @@
   "description": "## 📌 Descrição",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts"
+    "build:test": "rimraf .tmp-test && tsc -p tsconfig.test.json",
+    "test": "npm run build:test && NODE_ENV=test mocha '.tmp-test/test/setup.js' '.tmp-test/test/**/*.test.js' --timeout 15000",
+    "dev": "ts-node src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -18,16 +20,27 @@
   },
   "homepage": "https://github.com/lucasobelmiro/controle-financeiro-desweb-20251#readme",
   "dependencies": {
-    "dotenv": "^17.2.0",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.2",
     "pg": "^8.16.3",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/chai": "^4.3.20",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^24.0.14",
+    "@types/supertest": "^6.0.3",
+    "chai": "^4.5.0",
+    "mocha": "^10.8.2",
+    "rimraf": "^6.0.1",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

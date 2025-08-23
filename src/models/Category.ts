@@ -1,21 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 
-interface CategoryAttributes {
-  id: number;
-  name: string;
-  type: "entrada" | "saida";
-}
-
-interface CategoryCreationAttributes extends Omit<CategoryAttributes, "id"> {}
-
-export class Category
-  extends Model<CategoryAttributes, CategoryCreationAttributes>
-  implements CategoryAttributes
-{
+export class Category extends Model {
   public id!: number;
   public name!: string;
-  public type!: "entrada" | "saida";
 }
 
 Category.init(
@@ -28,10 +16,7 @@ Category.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    type: {
-      type: DataTypes.ENUM("entrada", "saida"),
-      allowNull: false,
+      unique: true,
     },
   },
   {

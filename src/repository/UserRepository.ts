@@ -1,21 +1,30 @@
-import { User } from "../models/User";
+import User, { UserAttributes, UserCreationAttributes } from "../models/User";
 
 export class UserRepository {
-  // Criar um novo usuário
-  async createUser(name: string, email: string, password: string) {
-    // Use o método `create` para salvar no banco de dados
-    return await User.create({
-      name,
-      email,
-      password,
-    });
+  async create(userData: UserCreationAttributes): Promise<User> {
+    return User.create(userData);
   }
 
-  async getAllUsers() {
-    return await User.findAll();
+  async findAll(): Promise<User[]> {
+    return User.findAll();
   }
 
-  async getUserById(id: number) {
-    return await User.findByPk(id);
+  async findById(id: number): Promise<User | null> {
+    return User.findByPk(id);
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return User.findOne({ where: { email } });
+  }
+
+  async update(
+    id: number,
+    updates: Partial<UserAttributes>
+  ): Promise<[number, User[]]> {
+    return User.update(updates, { where: { id }, returning: true });
+  }
+
+  async delete(id: number): Promise<number> {
+    return User.destroy({ where: { id } });
   }
 }
