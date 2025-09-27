@@ -166,7 +166,6 @@ export default function TransactionForm() {
           {isEdit ? "Editar Transação" : "Adicionar Transação"}
         </h2>
 
-        {/* Toggle tipo */}
         <div
           style={{
             display: "flex",
@@ -209,7 +208,6 @@ export default function TransactionForm() {
           </button>
         </div>
 
-        {/* Data */}
         <label style={{ display: "block", fontWeight: 600, marginBottom: 6 }}>
           Data
         </label>
@@ -221,7 +219,6 @@ export default function TransactionForm() {
           disabled={loading}
         />
 
-        {/* Categoria */}
         <label
           style={{
             display: "block",
@@ -246,7 +243,6 @@ export default function TransactionForm() {
           ))}
         </select>
 
-        {/* Valor */}
         <label
           style={{
             display: "block",
@@ -266,7 +262,6 @@ export default function TransactionForm() {
           disabled={loading}
         />
 
-        {/* Descrição */}
         <label
           style={{
             display: "block",
