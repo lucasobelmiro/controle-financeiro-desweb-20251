@@ -6,6 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "outDir": "./lib",
-    "types": ["node", "mocha", "chai"]
+    "types": ["node", "mocha", "chai"],
+    "moduleResolution": "node",
+    "skipLibCheck": true
   }
 }

@@ -28,8 +28,10 @@ export class TransactionService {
     ) {
       throw new Error("Valor inválido");
     }
-
-    const categoria = await this.categoryRepo.getCategoryById(data.categoryId);
+    const categoria = await this.categoryRepo.getCategoryByIdVisible(
+      data.categoryId,
+      data.userId
+    );
     if (!categoria) throw new Error("Categoria não encontrada");
 
     return await this.transactionRepo.createTransaction({
@@ -52,12 +54,17 @@ export class TransactionService {
   }
 
   async updateTransaction(id: number, updates: Partial<TransactionDTO>) {
-    if (updates.categoryId) {
-      const categoria = await this.categoryRepo.getCategoryById(
-        updates.categoryId
+    if (updates.categoryId !== undefined) {
+      const current = await this.getTransactionById(id);
+      if (!current) throw new Error("Transação não encontrada");
+
+      const cat = await this.categoryRepo.getCategoryByIdVisible(
+        updates.categoryId,
+        current.userId
       );
-      if (!categoria) throw new Error("Categoria não encontrada");
+      if (!cat) throw new Error("Categoria não encontrada");
     }
+
     if (updates.valor !== undefined && isNaN(Number(updates.valor))) {
       throw new Error("Valor inválido");
     }
@@ -163,7 +170,9 @@ export class TransactionService {
     }> = [];
     for (const [catIdStr, total] of Object.entries(totalsByCat)) {
       const catId = Number(catIdStr);
-      const cat = await this.categoryRepo.getCategoryById(catId);
+
+      const cat = await this.categoryRepo.getCategoryByIdVisible(catId, userId);
+
       const pct = totalSaidas > 0 ? (Number(total) / totalSaidas) * 100 : 0;
       items.push({
         categoryId: catId,

@@ -1,20 +1,34 @@
+import { Op } from "sequelize";
 import { Category } from "../models/Category";
 
 export class CategoryRepository {
-  async createCategory(name: string) {
-    return await Category.create({ name });
+  async createCategory(name: string, userId: number | null, isGlobal: boolean) {
+    return await Category.create({ name, userId, isGlobal });
   }
 
-  async getAllCategories() {
-    return await Category.findAll();
+  async getAllCategoriesVisible(userId: number) {
+    return await Category.findAll({
+      where: { [Op.or]: [{ isGlobal: true }, { userId }] },
+      order: [["name", "ASC"]],
+    });
   }
 
-  async getCategoryById(id: number) {
-    return await Category.findByPk(id);
+  async getCategoryByIdVisible(id: number, userId: number) {
+    return await Category.findOne({
+      where: { id, [Op.or]: [{ isGlobal: true }, { userId }] },
+    });
   }
 
-  async getCategoryByName(name: string) {
-    return await Category.findOne({ where: { name } });
+  async getCategoryByNameForUserOrGlobal(name: string, userId: number) {
+    return await Category.findOne({
+      where: { name, [Op.or]: [{ isGlobal: true }, { userId }] },
+    });
+  }
+
+  async getOwnCategoryById(id: number, userId: number) {
+    return await Category.findOne({
+      where: { id, userId, isGlobal: false },
+    });
   }
 
   async deleteCategory(id: number) {
@@ -27,7 +41,7 @@ export class CategoryRepository {
   }
 
   async updateCategory(id: number, data: Partial<Category>) {
-    const category = await this.getCategoryById(id);
+    const category = await Category.findByPk(id);
     if (!category) return null;
     return await category.update(data);
   }

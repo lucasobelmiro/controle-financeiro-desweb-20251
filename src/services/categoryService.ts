@@ -12,37 +12,62 @@ export class CategoryService {
     }
   }
 
-  async createCategory(name: string) {
+  async createCategory(
+    name: string,
+    userId: number,
+    isGlobal: boolean,
+    isAdmin: boolean
+  ) {
     this.validateName(name);
-    const existing = await this.categoryRepo.getCategoryByName(name);
-    if (existing) throw new Error("Já existe uma categoria com esse nome");
-    return await this.categoryRepo.createCategory(name);
+    if (isGlobal && !isAdmin) {
+      throw new Error("Apenas administradores podem criar categorias globais");
+    }
+    const dup = await this.categoryRepo.getCategoryByNameForUserOrGlobal(
+      name.trim(),
+      userId
+    );
+    if (dup) throw new Error("Já existe uma categoria com esse nome");
+
+    const owner = isGlobal ? null : userId;
+    return await this.categoryRepo.createCategory(
+      name.trim(),
+      owner,
+      !!isGlobal
+    );
   }
 
-  async getAllCategories() {
-    return await this.categoryRepo.getAllCategories();
+  async getAllCategories(userId: number) {
+    return await this.categoryRepo.getAllCategoriesVisible(userId);
   }
 
-  async getCategoryById(id: number) {
-    const category = await this.categoryRepo.getCategoryById(id);
+  async getCategoryById(id: number, userId: number) {
+    const category = await this.categoryRepo.getCategoryByIdVisible(id, userId);
     if (!category) throw new Error("Categoria não encontrada");
     return category;
   }
 
-  async updateCategory(id: number, name: string) {
+  async updateCategory(id: number, name: string, userId: number) {
     this.validateName(name);
-    const dup = await this.categoryRepo.getCategoryByName(name);
+    const own = await this.categoryRepo.getOwnCategoryById(id, userId);
+    if (!own) throw new Error("Categoria não encontrada");
+
+    const dup = await this.categoryRepo.getCategoryByNameForUserOrGlobal(
+      name.trim(),
+      userId
+    );
     if (dup && dup.id !== id)
       throw new Error("Já existe uma categoria com esse nome");
 
-    const category = await this.categoryRepo.updateCategory(id, { name });
+    const category = await this.categoryRepo.updateCategory(id, {
+      name: name.trim(),
+    });
     if (!category) throw new Error("Categoria não encontrada");
     return category;
   }
 
-  async deleteCategory(id: number) {
-    const category = await this.categoryRepo.getCategoryById(id);
-    if (!category) throw new Error("Categoria não encontrada");
+  async deleteCategory(id: number, userId: number) {
+    const own = await this.categoryRepo.getOwnCategoryById(id, userId);
+    if (!own) throw new Error("Categoria não encontrada");
 
     const txRepo = new TransactionRepository();
     const hasTx = await txRepo.hasTransactionsByCategory(id);

@@ -19,17 +19,19 @@ export class UserService {
     if (!userData.email || !userData.password) {
       throw new Error("Email e senha são obrigatórios");
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(userData.email)) {
+
+    const email = String(userData.email).trim().toLowerCase();
+    if (!emailRegex.test(email)) {
       throw new Error("Email inválido");
     }
-    const existingUser = await this.userRepository.findByEmail(userData.email);
+
+    const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) throw new Error("E-mail já cadastrado");
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     return this.userRepository.create({
       name: userData.name!,
-      email: userData.email,
+      email,
       password: hashedPassword,
       role: (userData.role as any) || "user",
     });
@@ -63,18 +65,23 @@ export class UserService {
   }
 
   async authenticate(email: string, password: string) {
-    const user = await this.userRepository.findByEmail(email);
+    const normalizedEmail = String(email).trim().toLowerCase();
+    console.log("[AUTH] recebido:", email, " | normalizado:", normalizedEmail);
+
+    const user = await this.userRepository.findByEmail(normalizedEmail);
+    console.log("[AUTH] encontrou usuário?", !!user);
+
     if (!user) throw new Error("Usuário ou senha inválidos");
 
     const ok = await bcrypt.compare(password, user.password);
+    console.log("[AUTH] senha confere?", ok);
+
     if (!ok) throw new Error("Usuário ou senha inválidos");
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       this.jwtSecret,
-      {
-        expiresIn: "1h",
-      }
+      { expiresIn: "1h" }
     );
     return { user, token };
   }

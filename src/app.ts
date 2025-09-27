@@ -4,10 +4,18 @@ import sequelize from "./config/database";
 import userRoutes from "./routes/userRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
+import cors from "cors";
 
 dotenv.config();
 
 export const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(express.json());
 
 app.use("/users", userRoutes);

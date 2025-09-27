@@ -1,9 +1,10 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
-
 export class Category extends Model {
   public id!: number;
   public name!: string;
+  public isGlobal!: boolean;
+  public userId!: number | null;
 }
 
 Category.init(
@@ -16,7 +17,17 @@ Category.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+    },
+    isGlobal: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "is_global",
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: "userId",
     },
   },
   {
